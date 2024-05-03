@@ -195,15 +195,18 @@ const containerWidth = slider.parentElement.clientWidth;
 let isScrolling = false;
 
 function handleTouchStart(e) {
+  e.preventDefault();
   isScrolling = true;
   startX = e.touches[0].clientX;
 }
 
 function handleTouchMove(e) {
+  e.preventDefault();
   if (!isScrolling) return;
   const x = e.touches[0].clientX;
   const move = startX - x;
   slider.style.transition = "none";
+
   slider.style.transform = `translateX(${-(
     currentSlide * slideWidth +
     move
@@ -211,6 +214,7 @@ function handleTouchMove(e) {
 }
 
 function handleTouchEnd(e) {
+  e.preventDefault();
   isScrolling = false;
   const endX = e.changedTouches[0].clientX;
   const move = startX - endX;
@@ -218,31 +222,19 @@ function handleTouchEnd(e) {
 
   if (Math.abs(move) > 50) {
     if (move > 0) {
-      // swipe left
       currentSlide = (currentSlide + 1) % numSlides;
     } else {
-      // swipe right
       currentSlide = (currentSlide - 1 + numSlides) % numSlides;
     }
   }
   slider.style.transform = `translateX(${-currentSlide * slideWidth}px)`;
 }
 
-// function loop() {
-//   setInterval(() => {
-//     if (!isScrolling) {
-//       currentSlide = (currentSlide + 1) % numSlides;
-//       slider.style.transition = "transform 0.3s ease";
-//       slider.style.transform = `translateX(${-currentSlide * slideWidth}px)`;
-//     }
-//   }, 2000);
-// }
-
-function loop() {
+function loop(e) {
   if (!isScrolling) {
     currentSlide = (currentSlide + 1) % numSlides;
     slider.style.transition = "transform 0.3s ease";
-    slider.style.transform = `translateX(${-currentSlide * slideWidth}px)`;
+    slider.style.transform = `translateX(${0}px)`;
   }
 }
 
